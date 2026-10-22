@@ -1,11 +1,23 @@
 from flask import Flask
-from sqlalchemy import true
-app = Flask (__name__ )
+
+from config import Config
+from extensions import db
+
+app = Flask(__name__)
+app.config.from_object(Config)
+
+db.init_app(app)
+
+import models  # noqa: E402,F401  (table register होण्यासाठी)
+
+with app.app_context():
+    db.create_all()
 
 
 @app.route("/")
 def home():
-    return "welcome to the expense tracker app"
-if __name__ == '__main__':
-    app.run(debug=True)
+    return "Hello, Expense Tracker!"
 
+
+if __name__ == "__main__":
+    app.run(debug=True)
